@@ -44,3 +44,49 @@ char *peek(Stack *s) {
     }
     return NULL;
 }
+
+// Prioritas operator
+int precedence(char ch) {
+    switch (ch) {
+        case '+':
+        case '-': return 1;
+        case '*':
+        case '/': return 2;
+        case '^': return 3;
+    }
+    return -1;
+}
+
+// Mengecek apakah karakter adalah operator
+int isOperator(char ch) {
+    return ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^';
+}
+
+// Fungsi konversi dari Infix ke Postfix
+void infixToPostfix(char *infix, char *postfix) {
+    Stack operators;
+    init(&operators);
+    int i = 0, k = 0;
+    char token, temp[MAX];
+    while ((token = infix[i++]) != '\0') {
+        if (isalnum(token)) {
+            postfix[k++] = token; // Operand langsung dimasukkan ke hasil
+        } else if (token == '(') {
+            push(&operators, (char[]){token, '\0'});
+        } else if (token == ')') {
+            while (!isEmpty(&operators) && (peek(&operators))[0] != '(') {
+                postfix[k++] = pop(&operators)[0];
+            }
+            pop(&operators);
+        } else if (isOperator(token)) {
+            while (!isEmpty(&operators) && precedence(peek(&operators)[0]) >= precedence(token)) {
+                postfix[k++] = pop(&operators)[0];
+            }
+            push(&operators, (char[]){token, '\0'});
+        }
+    }
+    while (!isEmpty(&operators)) {
+        postfix[k++] = pop(&operators)[0];
+    }
+    postfix[k] = '\0';
+}
