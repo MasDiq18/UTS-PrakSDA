@@ -106,9 +106,8 @@ void postfixToInfix(const char *postfix, char *infix) {
     Stack operands;
     init(&operands);
     int i = 0;
-    char token;
-    char buffer[MAX];
-
+    char token, buffer[MAX];
+    
     while ((token = postfix[i++]) != '\0') {
         if (isalnum(token)) {
             int j = 0;
@@ -116,8 +115,7 @@ void postfixToInfix(const char *postfix, char *infix) {
                 buffer[j++] = token;
                 token = postfix[i++];
             }
-            buffer[j] = '\0';
-            i--;
+            buffer[j] = '\0'; i--;
             push(&operands, buffer);
         } else if (isOperator(token)) {
             char op2[MAX], op1[MAX], expr[MAX];
@@ -127,10 +125,39 @@ void postfixToInfix(const char *postfix, char *infix) {
             push(&operands, expr);
         }
     }
+    strcpy(infix, pop(&operands));
+}
 
-    if (!isEmpty(&operands)) {
-        strcpy(infix, pop(&operands));
+void prefixToInfix(const char *prefix, char *infix) {
+    Stack operands;
+    init(&operands);
+    int len = strlen(prefix);
+    
+    for (int i = len - 1; i >= 0; i--) {
+        if (isalnum(prefix[i])) {
+            char temp[2] = {prefix[i], '\0'};
+            push(&operands, temp);
+        } else if (isOperator(prefix[i])) {
+            char op1[MAX], op2[MAX], expr[MAX];
+            strcpy(op1, pop(&operands));
+            strcpy(op2, pop(&operands));
+            sprintf(expr, "(%s %c %s)", op1, prefix[i], op2);
+            push(&operands, expr);
+        }
     }
+    strcpy(infix, pop(&operands));
+}
+
+void prefixToPostfix(const char *prefix, char *postfix) {
+    char infix[MAX];
+    prefixToInfix(prefix, infix);
+    infixToPostfix(infix, postfix);
+}
+
+void postfixToPrefix(const char *postfix, char *prefix) {
+    char infix[MAX];
+    postfixToInfix(postfix, infix);
+    infixToPrefix(infix, prefix);
 }
 
 int main() {
@@ -142,28 +169,27 @@ int main() {
     printf("2. Postfix ke Infix\n");
     printf("3. Infix ke Prefix\n");
     printf("4. Prefix ke Infix\n");
-    printf("Masukkan pilihan (1/2/3/4): ");
+    printf("5. Prefix ke Postfix\n");
+    printf("6. Postfix ke Prefix\n");
+    printf("Masukkan pilihan (1-6): ");
     scanf("%d", &pilihan);
-    getchar();
+    getchar(); // Menghapus newline dari buffer
 
     printf("Masukkan ekspresi: ");
     fgets(input, MAX, stdin);
     input[strcspn(input, "\n")] = 0;
 
-    if (pilihan == 1) {
-        infixToPostfix(input, output);
-        printf("Ekspresi dalam Postfix: %s\n", output);
-    } else if (pilihan == 2) {
-        postfixToInfix(input, output);
-        printf("Ekspresi dalam Infix: %s\n", output);
-    } else if (pilihan == 3) {
-        infixToPrefix(input, output);
-        printf("Ekspresi dalam Prefix: %s\n", output);
-    } else if (pilihan == 4) {
-        printf("Fungsi Prefix ke Infix belum diimplementasikan.\n");
-    } else {
+    if (pilihan == 1) infixToPostfix(input, output);
+    else if (pilihan == 2) postfixToInfix(input, output);
+    else if (pilihan == 3) infixToPrefix(input, output);
+    else if (pilihan == 4) prefixToInfix(input, output);
+    else if (pilihan == 5) prefixToPostfix(input, output);
+    else if (pilihan == 6) postfixToPrefix(input, output);
+    else {
         printf("Pilihan tidak valid.\n");
+        return 1;
     }
 
+    printf("Hasil: %s\n", output);
     return 0;
 }
