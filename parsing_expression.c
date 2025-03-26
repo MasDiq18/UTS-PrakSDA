@@ -164,32 +164,41 @@ int main() {
     char input[MAX], output[MAX] = "";
     int pilihan;
 
-    printf("Pilih Konversi:\n");
-    printf("1. Infix ke Postfix\n");
-    printf("2. Postfix ke Infix\n");
-    printf("3. Infix ke Prefix\n");
-    printf("4. Prefix ke Infix\n");
-    printf("5. Prefix ke Postfix\n");
-    printf("6. Postfix ke Prefix\n");
-    printf("Masukkan pilihan (1-6): ");
-    scanf("%d", &pilihan);
-    getchar(); // Menghapus newline dari buffer
+    do {
+        printf("\nPilih Konversi:\n");
+        printf("1. Infix ke Postfix\n");
+        printf("2. Postfix ke Infix\n");
+        printf("3. Infix ke Prefix\n");
+        printf("4. Prefix ke Infix\n");
+        printf("5. Prefix ke Postfix\n");
+        printf("6. Postfix ke Prefix\n");
+        printf("0. Keluar\n");
+        printf("Masukkan pilihan (0-6): ");
+        scanf("%d", &pilihan);
+        getchar();
 
-    printf("Masukkan ekspresi: ");
-    fgets(input, MAX, stdin);
-    input[strcspn(input, "\n")] = 0;
+        if (pilihan == 0) {
+            printf("Terima kasih! Program selesai.\n");
+            break;
+        }
 
-    if (pilihan == 1) infixToPostfix(input, output);
-    else if (pilihan == 2) postfixToInfix(input, output);
-    else if (pilihan == 3) infixToPrefix(input, output);
-    else if (pilihan == 4) prefixToInfix(input, output);
-    else if (pilihan == 5) prefixToPostfix(input, output);
-    else if (pilihan == 6) postfixToPrefix(input, output);
-    else {
-        printf("Pilihan tidak valid.\n");
-        return 1;
-    }
+        printf("Masukkan ekspresi: ");
+        fgets(input, MAX, stdin);
+        input[strcspn(input, "\n")] = 0;
 
-    printf("Hasil: %s\n", output);
+        if (pilihan == 1) infixToPostfix(input, output);
+        else if (pilihan == 2) postfixToInfix(input, output);
+        else if (pilihan == 3) infixToPrefix(input, output);
+        else if (pilihan == 4) prefixToInfix(input, output);
+        else if (pilihan == 5) prefixToPostfix(input, output);
+        else if (pilihan == 6) postfixToPrefix(input, output);
+        else {
+            printf("Pilihan tidak valid.\n");
+            continue;
+        }
+
+        printf("Hasil: %s\n", output);
+    } while (1);
+
     return 0;
 }
