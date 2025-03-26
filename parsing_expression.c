@@ -10,3 +10,13 @@ typedef struct {
     char arr[MAX][MAX];
     int top;
 } Stack;
+
+// Fungsi untuk menginisialisasi stack
+void init(Stack *s) {
+    s->top = -1;
+}
+
+// Mengecek apakah stack kosong
+int isEmpty(Stack *s) {
+    return s->top == -1;
+}
