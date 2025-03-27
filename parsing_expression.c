@@ -11,23 +11,29 @@ typedef struct {
     int top;
 } Stack;
 
+// Menginisialisasi stack
 void init(Stack *s) { s->top = -1; }
+// Mengecek apakah stack kosong
 int isEmpty(Stack *s) { return s->top == -1; }
+// Menambahkan elemen ke stack
 void push(Stack *s, const char *str) {
     if (s->top < MAX - 1) {
         s->top++;
         strcpy(s->arr[s->top], str);
     }
 }
+// Menghapus elemen dari stack
 char *pop(Stack *s) {
     if (!isEmpty(s)) return s->arr[s->top--];
     return NULL;
 }
+// Melihat elemen teratas stack
 char *peek(Stack *s) {
     if (!isEmpty(s)) return s->arr[s->top];
     return NULL;
 }
 
+// Mengembalikan prioritas operator
 int precedence(char ch) {
     switch (ch) {
         case '+': case '-': return 1;
@@ -37,8 +43,10 @@ int precedence(char ch) {
     return -1;
 }
 
+// Mengecek apakah karakter adalah operator
 int isOperator(char ch) { return ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^'; }
 
+// Membalik string untuk konversi infix ke prefix
 void reverseString(char *str) {
     int len = strlen(str);
     for (int i = 0; i < len / 2; i++) {
@@ -48,6 +56,7 @@ void reverseString(char *str) {
     }
 }
 
+// Mengonversi infix ke postfix
 void infixToPostfix(const char *infix, char *postfix) {
     Stack operators;
     init(&operators);
@@ -88,6 +97,7 @@ void infixToPostfix(const char *infix, char *postfix) {
     postfix[k - 1] = '\0';
 }
 
+// Mengonversi infix ke prefix
 void infixToPrefix(const char *infix, char *prefix) {
     char reversed[MAX], postfix[MAX] = "";
     strcpy(reversed, infix);
@@ -102,6 +112,7 @@ void infixToPrefix(const char *infix, char *prefix) {
     strcpy(prefix, postfix);
 }
 
+// Mengonversi postfix ke infix
 void postfixToInfix(const char *postfix, char *infix) {
     Stack operands;
     init(&operands);
@@ -128,6 +139,7 @@ void postfixToInfix(const char *postfix, char *infix) {
     strcpy(infix, pop(&operands));
 }
 
+// Mengonversi prefix ke infix
 void prefixToInfix(const char *prefix, char *infix) {
     Stack operands;
     init(&operands);
@@ -148,12 +160,14 @@ void prefixToInfix(const char *prefix, char *infix) {
     strcpy(infix, pop(&operands));
 }
 
+// Mengonversi prefix ke postfix
 void prefixToPostfix(const char *prefix, char *postfix) {
     char infix[MAX];
     prefixToInfix(prefix, infix);
     infixToPostfix(infix, postfix);
 }
 
+// Mengonversi postfix ke prefix
 void postfixToPrefix(const char *postfix, char *prefix) {
     char infix[MAX];
     postfixToInfix(postfix, infix);
